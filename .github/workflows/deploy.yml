@@ -8,6 +8,10 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages  # This line fixes the error
+      url: ${{ steps.deployment.outputs.page_url }}  # Optional: Adds the URL in job summary
+
     permissions:
       contents: read
       pages: write
@@ -23,7 +27,8 @@ jobs:
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: './'  # Change this if your build files are in another folder
+          path: './'  # Adjust if your build output is in a different folder
 
       - name: Deploy to GitHub Pages
+        id: deployment  # Add this to reference the deployment output
         uses: actions/deploy-pages@v2
