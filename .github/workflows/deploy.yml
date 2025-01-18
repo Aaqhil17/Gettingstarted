@@ -1,0 +1,34 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # Change if your branch is different
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages  # This line fixes the error
+      url: ${{ steps.deployment.outputs.page_url }}  # Optional: Adds the URL in job summary
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: './'  # Adjust if your build output is in a different folder
+
+      - name: Deploy to GitHub Pages
+        id: deployment  # Add this to reference the deployment output
+        uses: actions/deploy-pages@v2
